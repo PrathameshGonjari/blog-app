@@ -8,6 +8,15 @@ interface Params {
   }>;
 }
 
+export async function generateStaticParams() {
+  const query = `*[_type == "post"] { slug }`;
+  const posts = await client.fetch(query);
+  return posts.map((post: { slug: { current: string } }) => ({
+    slug: post.slug.current,
+  }));
+}
+
+
 async function getPost(slug: string) {
   const query = `
     *[_type == "post" && slug.current == $slug][0] {
