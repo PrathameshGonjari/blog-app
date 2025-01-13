@@ -1,4 +1,3 @@
-import { init } from 'next/dist/compiled/webpack/webpack';
 import { Rule } from 'sanity';
 
 export const post = {
