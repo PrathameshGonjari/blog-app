@@ -22,7 +22,7 @@ async function getPosts() {
   return data;
 }
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 export default async function Home() {
   const posts = await getPosts();
