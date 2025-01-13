@@ -54,7 +54,7 @@ const authorStyle = `
 function PostComponent({ post }: PostProps) {
   return (
     <div className={cardStyle}>
-      <Link href={`/post/${post.slug.current}`}>
+      <Link href={`/posts/${post.slug.current}`}>
         <h2 className={titleStyle}>{post.title}</h2>
         <p className={metadataStyle}>Published: {new Date(post.publishedAt).toLocaleDateString()}</p>
         <p className={authorStyle}>Author: {post.author?.name || "Unknown"}</p>

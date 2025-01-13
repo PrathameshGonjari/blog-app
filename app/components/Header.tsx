@@ -5,9 +5,9 @@ interface HeaderProps {
 function Header({ title }: HeaderProps) {
   return (
     <header className="py-14 px-4 mb-12 text-center border-b dark:border-gray-700">
-      <h2 className="uppercase text-2xl mx-auto max-w-2xl font-bold">
+      <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
         {title}
-      </h2>
+      </h1>
     </header>
   );
 }
