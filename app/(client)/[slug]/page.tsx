@@ -8,6 +8,7 @@ interface Params {
   }>;
 }
 
+//ssg
 export async function generateStaticParams() {
   const query = `*[_type == "post"] { slug }`;
   const posts = await client.fetch(query);
@@ -16,6 +17,8 @@ export async function generateStaticParams() {
   }));
 }
 
+// static
+// export const revalidate = 10;
 
 async function getPost(slug: string) {
   const query = `

@@ -22,7 +22,8 @@ async function getPosts() {
   return data;
 }
 
-export const revalidate = 10;
+//static rendering
+// export const revalidate = 10;
 
 export default async function Home() {
   const posts = await getPosts();
