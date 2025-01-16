@@ -23,7 +23,7 @@ async function getPosts() {
 }
 
 //static rendering
-// export const revalidate = 10;
+// export const revalidate = 5;
 
 export default async function Home() {
   const posts = await getPosts();
