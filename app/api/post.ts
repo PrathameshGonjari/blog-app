@@ -1,14 +1,14 @@
-import crypto from "crypto";
+import { SIGNATURE_HEADER_NAME, isValidSignature } from "@sanity/webhook";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const SECRET = process.env.SANITY_WEBHOOK_SECRET; 
+const SECRET = process.env.SANITY_WEBHOOK_SECRET as string;
 
 interface WebhookPayload {
   _type: string;
   _id: string;
   _rev: string;
   slug?: string;
-  [key: string]: unknown; 
+  [key: string]: unknown;
 }
 
 export default async function handler(
@@ -19,7 +19,7 @@ export default async function handler(
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  const signature = req.headers["sanity-webhook-signature"];
+  const signature = req.headers[SIGNATURE_HEADER_NAME]?.toString();
   if (!signature) {
     return res.status(400).json({ message: "Missing signature header" });
   }
@@ -27,14 +27,11 @@ export default async function handler(
   const body = JSON.stringify(req.body);
 
   try {
-    
-    const hash = crypto
-      .createHmac("sha256", SECRET as string)
-      .update(body)
-      .digest("hex");
-
-    if (hash !== signature) {
-      return res.status(401).json({ message: "Unauthorized: Invalid signature" });
+    const valid = await isValidSignature(body, signature, SECRET);
+    if (!valid) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: Invalid signature" });
     }
 
     console.log("Webhook received:", req.body);
@@ -42,11 +39,13 @@ export default async function handler(
     const { slug } = req.body as WebhookPayload;
 
     if (!slug || typeof slug !== "string") {
-      return res.status(400).json({ message: "Invalid payload: Missing or invalid slug" });
+      return res
+        .status(400)
+        .json({ message: "Invalid payload: Missing or invalid slug" });
     }
 
     await res.revalidate(`/${slug}`);
-    await res.revalidate("/"); 
+    await res.revalidate("/");
 
     return res.status(200).json({ message: "Webhook processed successfully" });
   } catch (error) {
